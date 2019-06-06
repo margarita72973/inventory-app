@@ -1,7 +1,6 @@
 import initialState from './initialState';
 
-
-export default function placesReducer(state = initialState.places, action) {
+export default function inventoriesReducer(state = initialState.inventories, action) {
 	switch(action.type) {
 
 		default:

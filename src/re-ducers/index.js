@@ -1,15 +1,19 @@
 import { combineReducers } from 'redux';
 
 import user  from './user';
-import places  from './places';
-import items  from './items';
+import storageLocations  from './storageLocations';
+import inventories  from './inventories';
+import categories  from './categories';
+import drawer  from './drawer';
 import ajaxStatus from './ajaxStatus';
 
 
 const rootReducer = combineReducers({
     user,
-    places,
-    items,
+    storageLocations,
+    inventories,
+    categories,
+    drawer,
     ajaxStatus,
 });
 

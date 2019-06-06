@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import {bindActionCreators} from 'redux';
-import * as userActions from '../_actions/user';
+import * as userActions from '../re-actions/user';
 
 
 class Login extends Component {
@@ -19,7 +19,7 @@ class Login extends Component {
 
 
 const mapDispatchToProps = dispatch => ({
-  userActions: bindActionCreators(userActions, dispatch),
+    userActions: bindActionCreators(userActions, dispatch),
 })
 export default connect(null, mapDispatchToProps)(Login);
 

@@ -1,0 +1,71 @@
+import React, { useEffect } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import {bindActionCreators} from 'redux';
+import { connect } from 'react-redux';
+import * as categoriesActions from '../re-actions/categories';
+import * as categoriesSelectors from '../re-selectors/categories';
+
+
+const useStyles = makeStyles({
+	card: {
+		maxWidth: 345,
+	},
+});
+
+function Category({category}) {
+	const { name, description } = category;
+	const classes = useStyles();
+
+	// useEffect(() => {
+	// 	console.log('Category', id)
+	// }, [])
+
+	return (
+		<Card className={classes.card}>
+			<CardActionArea>
+				<CardMedia
+					component="img"
+					alt="Contemplative Reptile"
+					height="140"
+					image="https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+					title="Contemplative Reptile"
+				/>
+				<CardContent>
+					<Typography gutterBottom variant="h5" component="h2">
+						{name}
+					</Typography>
+					<Typography variant="body2" color="textSecondary" component="p">
+						{description}
+					</Typography>
+				</CardContent>
+			</CardActionArea>
+			{/* <CardActions>
+				<Button size="small" color="primary">
+					Share
+				</Button>
+				<Button size="small" color="primary">
+					Learn More
+				</Button>
+			</CardActions> */}
+		</Card>
+	);
+}
+
+const mapStateToProps = (state, { id }) => ({
+	categoriesKeys: categoriesSelectors.getCategoriesKeysState(state),
+	category: categoriesSelectors.getCategoryState(state, id),
+	categories: state.categories
+})
+
+const mapDispatchToProps = dispatch => ({
+	categoriesActions: bindActionCreators(categoriesActions, dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Category);
