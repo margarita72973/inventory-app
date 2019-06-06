@@ -8,7 +8,7 @@ import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 import './Form.scss';
 
-// import AddImage from './AddImage'
+import AddImage from './AddImage'
 
 
 class AddCategoryForm extends React.Component {
@@ -16,6 +16,8 @@ class AddCategoryForm extends React.Component {
     state = {
         name: '',
         description: '',
+        image: '',
+        inventoriesIds: [],
     }
 
     submitForm = e => {
@@ -27,6 +29,11 @@ class AddCategoryForm extends React.Component {
 
     fillForm = value => e => {
         this.setState({[value]: e.target.value})
+    }
+
+    onImageChange = image => {
+        console.log('image', image)
+        this.setState({image})
     }
 
     render(){
@@ -58,7 +65,7 @@ class AddCategoryForm extends React.Component {
 
 
 
-                {/* <AddImage {...this.props} /> */}
+                <AddImage onImageChange={this.onImageChange} />
     
                 <Button variant="contained" color="primary" className='button' component="button" type="submit">
                     {/* {this.props.action === 'add' ? 'Add' : 'Edit'} Course  */}

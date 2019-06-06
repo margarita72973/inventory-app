@@ -10,6 +10,16 @@ export default function categoriesReducer(state = initialState.categories, actio
 
 		case 'LOAD_CATEGORIES':
 			return action.categories;
+		
+		case 'ADD_INVENTORY_TO_CATEGORY':
+		{
+			let { categoryId, inventoryId } = action;
+			if(state[categoryId].inventories.includes(inventoryId)) return state;
+			state[categoryId].inventories = [ ...state[categoryId].inventories, inventoryId ]
+			return {
+				...state
+			}
+		}
 
 		default:
 			return state;

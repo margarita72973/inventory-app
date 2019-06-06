@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -19,22 +20,18 @@ const useStyles = makeStyles({
 	},
 });
 
-function Category({category}) {
-	const { name, description } = category;
+function Category({category, id}) {
+	const { name, description, imgUrl, inventories } = category;
 	const classes = useStyles();
 
-	// useEffect(() => {
-	// 	console.log('Category', id)
-	// }, [])
-
 	return (
-		<Card className={classes.card}>
+		<Card component={Link} to={`/categories/${id}`} className={classes.card}>
 			<CardActionArea>
 				<CardMedia
 					component="img"
 					alt="Contemplative Reptile"
 					height="140"
-					image="https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"
+					image={imgUrl? imgUrl : "https://images.pexels.com/photos/104827/cat-pet-animal-domestic-104827.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"}
 					title="Contemplative Reptile"
 				/>
 				<CardContent>
@@ -43,6 +40,9 @@ function Category({category}) {
 					</Typography>
 					<Typography variant="body2" color="textSecondary" component="p">
 						{description}
+					</Typography>
+					<Typography variant="body2" color="textSecondary" component="p">
+						{!!inventories && inventories.length} inventories
 					</Typography>
 				</CardContent>
 			</CardActionArea>

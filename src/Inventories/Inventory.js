@@ -6,13 +6,11 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
 import ListItemText from '@material-ui/core/ListItemText';
 import IconButton from '@material-ui/core/IconButton';
-// import DeleteIcon from '@material-ui/icons/Delete';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-
-// import Form from './Form';
-// import * as videosActions from '../../re-actions/videos';
+import * as inventoriesActions from '../re-actions/inventories';
+import * as inventoriesSelectors from '../re-selectors/inventories';
 
 
 
@@ -48,10 +46,8 @@ class Inventory extends React.Component{
 
 
     render(){
-        // const { docId, video } = this.props;
         const { anchorEl } = this.state;
-        // const { youtubeInfo, publishDateTimestamp } = video;
-        // let publishDate = new Date(publishDateTimestamp).toLocaleString()
+        const { name, description, imgUrl, cost, currency, category } = this.props.inventory;
         return(
             <>
             <ListItem role={undefined} button 
@@ -60,10 +56,10 @@ class Inventory extends React.Component{
                 >
                 <div style={{
                     width:120, height:90,
-                    backgroundImage:`url(https://images.unsplash.com/photo-1532386236358-a33d8a9434e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80)`,
+                    backgroundImage:`url(${imgUrl ? imgUrl : `https://images.unsplash.com/photo-1532386236358-a33d8a9434e3?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&w=1000&q=80`})`,
                     backgroundSize: 'cover',
                     }}></div>
-                <ListItemText primary='Hello1' secondary='Hello2' />
+                <ListItemText primary={name} secondary={description || 'no description'} />
                 <ListItemSecondaryAction>
                     <IconButton aria-label="Comments" onClick={this.handleOpen}>
                         <MoreVertIcon />
@@ -85,10 +81,15 @@ class Inventory extends React.Component{
     }
 } 
 
-// const mapStateToProps = (state, ownProps) => ({ video: state.videos[ownProps.docId] })
-// const mapDispatchToProps = dispatch => ({
-    // videosActions: bindActionCreators(videosActions, dispatch),
-// })
 
-export default connect(null, null)(Inventory)
-// export default connect(mapStateToProps, mapDispatchToProps)(Inventory)
+const mapStateToProps = (state, { id }) => ({
+	inventoriesKeys: inventoriesSelectors.getInventoriesKeysState(state),
+	inventory: inventoriesSelectors.getInventoryState(state, id),
+	inventories: state.inventories
+})
+
+const mapDispatchToProps = dispatch => ({
+	inventoriesActions: bindActionCreators(inventoriesActions, dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Inventory);

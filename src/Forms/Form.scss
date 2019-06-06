@@ -1,8 +1,21 @@
-.categoryForm {
+.categoryForm, .inventoryForm {
     width: 55%;
     text-align: center;
     margin: auto;
     div.textField {
         width: 100%;
+    }
+
+
+/* styles.css */
+    .dropzone {
+        height : 20%;
+        border : 1px dashed lightgray;
+        cursor: pointer;
+        margin-top: 16px;
+        margin-bottom: 8px;
+    }
+    .dropzone:focus {
+        outline: none;
     }
 }

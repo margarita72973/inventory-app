@@ -7,13 +7,6 @@ import * as categoriesSelectors from '../re-selectors/categories';
 
 const CategoriesList = props => {
 
-  const [loaded, setLoaded] = useState(false);
-
-  useEffect( () => {
-      props.categoriesActions.loadCategories().then(()=>{
-        setLoaded(true)
-      })}, [])
-  
   return (
     <div style={{
       display: 'grid',
@@ -23,7 +16,6 @@ const CategoriesList = props => {
     }}
     >
       {
-        loaded &&
         props.categoriesKeys.map(id=>
           <Category key={id} id={id} />
         )

@@ -26,7 +26,7 @@ const styles = theme => ({
 	root: {
 		width: '100%',
 		marginBottom: '24px',
-  },
+	},
 	grow: {
 		flexGrow: 1,
 	},
@@ -138,7 +138,6 @@ class NavBar extends React.Component {
 				onClose={this.handleMenuClose}
 			>
 				<MenuItem onClick={this.handleMenuClose}>Profile</MenuItem>
-				<MenuItem onClick={this.handleMenuClose}>My account</MenuItem>
 			</Menu>
 		);
 
@@ -150,14 +149,25 @@ class NavBar extends React.Component {
 				open={isMobileMenuOpen}
 				onClose={this.handleMenuClose}
 			>
-				<MenuItem onClick={this.handleProfileMenuOpen}>
-					<IconButton className={classes.navButton} onClick={this.addInventory}>
-						<NoteAddIcon />
-					</IconButton>
+				<MenuItem>
 					<IconButton className={classes.navButton} color="inherit">
 						<AccountCircle />
 					</IconButton>
 					<p>Profile</p>
+				</MenuItem>
+				<MenuItem component={Link} to={{ pathname: `/categories/add`, 
+									state: { modal: true } }}>
+					<IconButton className={classes.navButton} color="inherit">
+						<NoteAddIcon />
+					</IconButton>
+					<p>Add Category</p>
+				</MenuItem>
+				<MenuItem component={Link} to={{ pathname: `/inventories/add`, 
+									state: { modal: true } }}>
+					<IconButton className={classes.navButton} color="inherit">
+						<NoteAddIcon />
+					</IconButton>
+					<p>Add Inventory</p>
 				</MenuItem>
 			</Menu>
 		);
@@ -187,13 +197,14 @@ class NavBar extends React.Component {
 						<div className={classes.grow} />
 						<div className={classes.sectionDesktop}>
 							<Tooltip title="Add Inventory">
-								<IconButton className={classes.navButton} onClick={this.addInventory}>
+								<IconButton component={Link} to={{ pathname: `/inventories/add`, 
+									state: { modal: true, title: 'Inventory' } }} className={classes.navButton}>
 									<NoteAddIcon />
 								</IconButton>
 							</Tooltip>
 							<Tooltip title="Add Category">
 								<IconButton component={Link} to={{ pathname: `/categories/add`, 
-									state: { modal: true } }} className={classes.navButton} onClick={this.addCategory}>
+									state: { modal: true, title: 'Category' } }} className={classes.navButton}>
 									<NoteAddIcon />
 								</IconButton>
 							</Tooltip>
