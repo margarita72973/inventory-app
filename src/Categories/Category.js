@@ -42,7 +42,7 @@ function Category({category, id}) {
 						{description}
 					</Typography>
 					<Typography variant="body2" color="textSecondary" component="p">
-						{!!inventories && inventories.length} inventories
+						{(!!inventories && inventories.length) || 0} inventories
 					</Typography>
 				</CardContent>
 			</CardActionArea>

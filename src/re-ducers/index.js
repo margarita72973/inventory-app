@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux';
 
 import user  from './user';
+import nextRoute  from './nextRoute';
 import storageLocations  from './storageLocations';
 import inventories  from './inventories';
 import categories  from './categories';
 import drawer  from './drawer';
 import ajaxStatus from './ajaxStatus';
+import forms from './forms';
 
 
 const rootReducer = combineReducers({
@@ -15,6 +17,8 @@ const rootReducer = combineReducers({
     categories,
     drawer,
     ajaxStatus,
+    nextRoute,
+    forms,
 });
 
 

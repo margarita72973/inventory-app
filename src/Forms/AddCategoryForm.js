@@ -4,6 +4,8 @@ import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import * as categoriesActions from '../re-actions/categories';
+import * as nextRouteActions from '../re-actions/nextRoute';
+import * as formsActions from '../re-actions/forms';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 import './Form.scss';
@@ -13,30 +15,34 @@ import AddImage from './AddImage'
 
 class AddCategoryForm extends React.Component {
 
-    state = {
-        name: '',
-        description: '',
-        image: '',
-        inventoriesIds: [],
-    }
-
     submitForm = e => {
         e.preventDefault();
-        this.props.categoriesActions.addCategory(this.state).then(()=>{
-            this.props.history.push('/categories');
+        const { addCategoryForm } = this.props.forms;
+        this.props.categoriesActions.addCategory(addCategoryForm).then(categoryId=>{
+            this.props.formsActions.clearForm('addCategoryForm');
+            if(!this.props.nextRoute) {
+                this.props.history.goBack();
+            } else {
+                let nextRoute = this.props.nextRoute;
+                if(nextRoute==='/inventories/add') {
+                    this.props.formsActions.fillForm({form: 'addInventoryForm', prop:'categoryId', value: categoryId})
+                }
+                this.props.nextRouteActions.clear();
+                this.props.history.push(nextRoute);
+            }
         })
     }
 
-    fillForm = value => e => {
-        this.setState({[value]: e.target.value})
+    fillForm = prop => e => {
+        this.props.formsActions.fillForm({form: 'addCategoryForm', prop, value: e.target.value})
     }
 
     onImageChange = image => {
-        console.log('image', image)
-        this.setState({image})
+        this.props.formsActions.fillForm({form: 'addCategoryForm', prop: 'image', value: image})
     }
 
     render(){
+        const { name, description } = this.props.forms.addCategoryForm;
         return (
             <form className='categoryForm' onSubmit={this.submitForm}>
                 <TextField
@@ -47,7 +53,7 @@ class AddCategoryForm extends React.Component {
                     autoComplete="current-name"
                     margin="normal"
                     variant="outlined"
-                    value={this.state.name}
+                    value={name}
                     onChange={this.fillForm('name')}
                     required
                 />
@@ -59,16 +65,13 @@ class AddCategoryForm extends React.Component {
                     margin="normal"
                     variant="outlined"
                     multiline
-                    value={this.state.description}
+                    value={description}
                     onChange={this.fillForm('description')}
                 />
-
-
 
                 <AddImage onImageChange={this.onImageChange} />
     
                 <Button variant="contained" color="primary" className='button' component="button" type="submit">
-                    {/* {this.props.action === 'add' ? 'Add' : 'Edit'} Course  */}
                     Add Category
                 </Button> 
             </form>
@@ -76,9 +79,16 @@ class AddCategoryForm extends React.Component {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
-    categoriesActions: bindActionCreators(categoriesActions, dispatch),
+const mapStateToProps = state => ({
+    nextRoute: state.nextRoute,
+    forms: state.forms
 })
 
-export default connect(null, mapDispatchToProps)(withRouter(AddCategoryForm));
+const mapDispatchToProps = dispatch => ({
+    categoriesActions: bindActionCreators(categoriesActions, dispatch),
+    nextRouteActions: bindActionCreators(nextRouteActions, dispatch),
+    formsActions: bindActionCreators(formsActions, dispatch),
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(AddCategoryForm));
 

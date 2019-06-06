@@ -14,6 +14,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import NoteAddIcon from '@material-ui/icons/NoteAdd';
+import Avatar from '@material-ui/core/Avatar';
 import Tooltip from '@material-ui/core/Tooltip';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
@@ -125,7 +126,7 @@ class NavBar extends React.Component {
 
 	render() {
 		const { anchorEl, mobileMoreAnchorEl } = this.state;
-		const { classes } = this.props;
+		const { classes, user } = this.props;
 		const isMenuOpen = Boolean(anchorEl);
 		const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -151,7 +152,7 @@ class NavBar extends React.Component {
 			>
 				<MenuItem>
 					<IconButton className={classes.navButton} color="inherit">
-						<AccountCircle />
+						{!!user && !!user.photoURL ? <Avatar src={user.photoURL} /> : <AccountCircle />}
 					</IconButton>
 					<p>Profile</p>
 				</MenuItem>
@@ -214,7 +215,7 @@ class NavBar extends React.Component {
 								onClick={this.handleProfileMenuOpen}
 								color="inherit"
 							>
-								<AccountCircle />
+								{!!user && !!user.photoURL ? <Avatar src={user.photoURL} /> : <AccountCircle />}
 							</IconButton>
 						</div>
 						<div className={classes.sectionMobile}>
@@ -235,8 +236,11 @@ NavBar.propTypes = {
 	classes: PropTypes.object.isRequired,
 };
 
+const mapStateToProps = state => ({
+	user: state.user
+})
 const mapDispatchToProps = dispatch => ({
     drawerActions: bindActionCreators(drawerActions, dispatch),
 })
 
-export default connect(null, mapDispatchToProps)(withStyles(styles)(NavBar));
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(NavBar));

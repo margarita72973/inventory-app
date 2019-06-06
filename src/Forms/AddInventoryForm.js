@@ -1,5 +1,4 @@
 import React from 'react'
-// import 'cropperjs/dist/cropper.css';
 import { withStyles } from '@material-ui/styles';
 import { withRouter } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
@@ -8,11 +7,15 @@ import Button from '@material-ui/core/Button';
 import {bindActionCreators} from 'redux';
 import { connect } from 'react-redux';
 import * as inventoriesActions from '../re-actions/inventories';
+import * as nextRouteActions from '../re-actions/nextRoute';
+import * as formsActions from '../re-actions/forms';
 import * as categoriesSelectors from '../re-selectors/categories';
 
 import './Form.scss';
 
 import AddImage from './AddImage';
+
+
 
 const currencies = [
 	{
@@ -33,13 +36,6 @@ const currencies = [
 	},
 ];
 
-
-// const useStyles = makeStyles(theme => ({
-// 	menu: {
-// 		width: 200,
-// 	},
-// }));
-
 const styles = theme => ({
 	menu: {
 		width: 200,
@@ -53,33 +49,35 @@ const styles = theme => ({
 
 class AddInventoryForm extends React.Component {
 
-		state = {
-			name: '',
-			description: '',
-			image: '',
-			cost: '',
-			currency: '',
-			categoryId: '',
-		}
-
 		submitForm = e => {
-				e.preventDefault();
-				this.props.inventoriesActions.addInventory(this.state).then(()=>{
-						this.props.history.goBack();
-				})
+			e.preventDefault();
+			const { addInventoryForm } = this.props.forms;
+			this.props.inventoriesActions.addInventory(addInventoryForm).then(()=>{
+					this.props.formsActions.clearForm('addInventoryForm');
+					this.props.history.goBack();
+			})
 		}
 
-		fillForm = value => e => {
-				this.setState({[value]: e.target.value})
+		fillForm = prop => e => {
+			if(!e.target.value && prop==='categoryId') {
+				this.addNewCategory()
+			}
+			this.props.formsActions.fillForm({form: 'addInventoryForm', prop, value: e.target.value})
+
 		}
 
 		onImageChange = image => {
-				console.log('image', image)
-				this.setState({image})
+			this.props.formsActions.fillForm({form: 'addInventoryForm', prop: 'image', value: image})
+		}
+
+		addNewCategory = e => {
+			this.props.nextRouteActions.setNextRoute(this.props.location.pathname);
+			this.props.history.push('/categories/add');
 		}
 
 		render(){
-			const { classes, categoriesKeys, categories } = this.props;
+			const { classes, categoriesKeys, categories, forms } = this.props;
+			const { name, description, cost, currency, categoryId } = forms.addInventoryForm;
 
 			return (
 				<form className='inventoryForm' onSubmit={this.submitForm}>
@@ -91,7 +89,7 @@ class AddInventoryForm extends React.Component {
 							autoComplete="current-name"
 							margin="normal"
 							variant="outlined"
-							value={this.state.name}
+							value={name}
 							onChange={this.fillForm('name')}
 							required
 						/>
@@ -103,14 +101,14 @@ class AddInventoryForm extends React.Component {
 							margin="normal"
 							variant="outlined"
 							multiline
-							value={this.state.description}
+							value={description}
 							onChange={this.fillForm('description')}
 						/>
 						{/* <div className='costValue'> */}
 							<TextField
 								id="outlined-number"
 								label="Cost"
-								value={this.state.cost}
+								value={cost}
 								onChange={this.fillForm('cost')}
 								type="number"
 								className='textField'
@@ -125,7 +123,7 @@ class AddInventoryForm extends React.Component {
 								select
 								label="Currency"
 								className='textField'
-								value={this.state.currency}
+								value={currency}
 								onChange={this.fillForm('currency')}
 								SelectProps={{
 									MenuProps: {
@@ -147,7 +145,7 @@ class AddInventoryForm extends React.Component {
 								select
 								label="Category"
 								className='textField'
-								value={this.state.categoryId}
+								value={categoryId}
 								onChange={this.fillForm('categoryId')}
 								SelectProps={{
 									MenuProps: {
@@ -158,6 +156,9 @@ class AddInventoryForm extends React.Component {
 								margin="normal"
 								variant="outlined"
 							>
+								<MenuItem value="">
+									<em>Add New Category</em>
+								</MenuItem>
 								{categoriesKeys.map(id => (
 									<MenuItem key={id} value={id}>
 										{categories[id].name}
@@ -180,13 +181,15 @@ class AddInventoryForm extends React.Component {
 
 const mapStateToProps = state => ({
 	categoriesKeys: categoriesSelectors.getCategoriesKeysState(state),
-	// category: categoriesSelectors.getCategoryState(state, id),
-	categories: state.categories
+	categories: state.categories,
+	forms: state.forms
 })
 
 
 const mapDispatchToProps = dispatch => ({
 	inventoriesActions: bindActionCreators(inventoriesActions, dispatch),
+	nextRouteActions: bindActionCreators(nextRouteActions, dispatch),
+	formsActions: bindActionCreators(formsActions, dispatch),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(withStyles(styles)(AddInventoryForm)));
